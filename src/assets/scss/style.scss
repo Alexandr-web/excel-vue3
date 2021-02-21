@@ -117,7 +117,9 @@ img {
         display: flex;
         flex-direction: column;
         &-item {
-          height: 40px;
+          &-form {
+            height: 40px;
+          }
           &-input {
             border: 1px solid #B6B6B6;
             background: #fff;

@@ -1,19 +1,13 @@
 <template>
   <form class="header__form">
-    <input class="header__form-input" type="text" v-model="val">
+    <input class="header__form-input" type="text" />
   </form>
 </template>
 
 <script>
-import { ref } from 'vue';
-
 export default {
   setup() {
-    const val = ref('');
 
-    return {
-      val
-    }
   }
 }
 </script>

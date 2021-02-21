@@ -35,9 +35,11 @@ export default {
     const numbers = computed(() => store.getters.getNumbers);
     const columns = computed(() => store.getters.getColumns);
 
+    store.dispatch('cleanActiveCells');
+
     return {
       numbers,
-      columns
+      columns,
     }
   },
   components: {

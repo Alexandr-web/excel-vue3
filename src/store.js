@@ -34,6 +34,9 @@ export default createStore({
     },
     changeActiveCell({ commit }, val) {
       commit('changeActiveCell', val);
+    },
+    setValueOfCell({ commit }, data) {
+      commit('setValueOfCell', data);
     }
   },
   mutations: {
@@ -60,6 +63,14 @@ export default createStore({
     },
     changeActiveCell(state, val) {
       state.activeCell = val;
+    },
+    setValueOfCell(state, data) {
+      const { id, symbol, num } = data[0];
+      const val = data[1];
+
+      state.columns.find(column => column.symbol === symbol).cells.find(cell => cell.id === id && cell.num === num).value = val;
+
+      localStorage.setItem('columns', JSON.stringify(state.columns));
     }
   }
 });
