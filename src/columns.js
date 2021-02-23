@@ -1,9 +1,10 @@
 import symbols from './symbols';
+import { ref } from 'vue';
 
-let columns = [];
+let columns = ref([]);
 
 if (localStorage.getItem('columns')) {
-  columns = JSON.parse(localStorage.getItem('columns'));
+  columns.value = JSON.parse(localStorage.getItem('columns'));
 } else {
   for (let i = 0; i < symbols.length; i++) {
     const column = {
@@ -15,13 +16,13 @@ if (localStorage.getItem('columns')) {
     };
   
     for (let j = 0; j < 25; j++) {
-      const cell = { symbol: symbols[i], num: j + 1, active: false, value: '', vModel: `vModel-${symbols[i]}-${j + 1}` };
+      const cell = { symbol: symbols[i], num: j + 1, active: false, value: '', vModel: `vModel-${symbols[i]}-${j + 1}`, choiceCell: false };
   
       column.cells.push(cell);
     }
   
-    columns.push(column);
+    columns.value.push(column);
   }
 }
 
-export default columns;
+export default columns.value;

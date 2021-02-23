@@ -35,8 +35,11 @@ export default createStore({
     changeActiveCell({ commit }, val) {
       commit('changeActiveCell', val);
     },
-    setValueOfCell({ commit }, data) {
-      commit('setValueOfCell', data);
+    saveValueOfCell({ commit }, data) {
+      commit('saveValueOfCell', data);
+    },
+    focusChoiceCells({ commit }, str) {
+      commit('focusChoiceCells', str);
     }
   },
   mutations: {
@@ -56,7 +59,10 @@ export default createStore({
     cleanActiveCells(state) {
       state.columns.map(column => {
         column.active = false;
-        column.cells.map(cell => cell.active = false);
+        column.cells.map(cell => {
+          cell.active = false;
+          cell.choiceCell = false;
+        });
       });
       
       state.numbers.map(num => num.active = false);
@@ -64,13 +70,36 @@ export default createStore({
     changeActiveCell(state, val) {
       state.activeCell = val;
     },
-    setValueOfCell(state, data) {
+    saveValueOfCell(state, data) {
       const { id, symbol, num } = data[0];
       const val = data[1];
 
       state.columns.find(column => column.symbol === symbol).cells.find(cell => cell.id === id && cell.num === num).value = val;
 
       localStorage.setItem('columns', JSON.stringify(state.columns));
+    },
+    focusChoiceCells(state, str) {
+      const cells = str.match(/([a-z]\d)+/gi);
+      
+      cleanChoiceCells();
+
+      if (cells) {
+        state.columns.map(column => {
+          column.cells.map(cell => {
+            cells.map(item => {
+              if (`${cell.symbol}${cell.num}` === item.toLowerCase()) {
+                cell.choiceCell = true;
+              }
+            }); 
+          });
+        });
+      } else {
+        cleanChoiceCells();
+      }
+
+      function cleanChoiceCells() {
+        state.columns.map(column => column.cells.map(cell => cell.choiceCell = false));
+      }
     }
   }
 });
