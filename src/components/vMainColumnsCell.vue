@@ -77,20 +77,31 @@ export default {
     }
 
     const endWrite = () => {
-      if (Array.isArray(endOfFormula(val.value.toString().replace(/=/, '')))) {
-        store.dispatch('saveValueOfCell', [props.cell, eval(endOfFormula(val.value.replace(/=/, '')).join(''))]);
-        val.value = eval(endOfFormula(val.value.replace(/=/, '')).join(''));
-      } else {
-        store.dispatch('saveValueOfCell', [props.cell, endOfFormula(val.value.toString().replace(/=/, ''))]);
-        val.value = endOfFormula(val.value.toString().replace(/=/, ''));
+      try {
+        if (Array.isArray(endOfFormula(val.value.toString().replace(/=/, '')))) {
+          store.dispatch('saveValueOfCell', [props.cell, eval(endOfFormula(val.value.replace(/=/, '')).join(''))]);
+          store.dispatch('cleanFocusChoiceCells');
+
+          val.value = eval(endOfFormula(val.value.replace(/=/, '')).join(''));
+        } else {
+          store.dispatch('saveValueOfCell', [props.cell, endOfFormula(val.value.toString().replace(/=/, ''))]);
+          store.dispatch('cleanFocusChoiceCells');
+
+          val.value = endOfFormula(val.value.toString().replace(/=/, ''));
+        }
+      } catch {
+        store.dispatch('saveValueOfCell', [props.cell, '#ИМЯ?']);
+        store.dispatch('cleanFocusChoiceCells');
+
+        val.value = '#ИМЯ?';
       }
     }
     
     function endOfFormula(value) {
       const result = value;
-
-      if (/([a-z]\d){1,}/gi.test(value) && res.length) {
-        return changeNumOnVal(result.split(/([a-z]\d){1,}/gi).filter(item => item), res);
+      
+      if (/([a-z]\d+)+/gi.test(value) && res.length) {
+        return changeNumOnVal(result.toLowerCase().split(/([a-z]\d+)+/gi).filter(item => item), res);
       } else {
         return result;
       }

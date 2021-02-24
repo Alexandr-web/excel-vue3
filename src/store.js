@@ -40,6 +40,9 @@ export default createStore({
     },
     focusChoiceCells({ commit }, str) {
       commit('focusChoiceCells', str);
+    },
+    cleanFocusChoiceCells({ commit }) {
+      commit('cleanFocusChoiceCells');
     }
   },
   mutations: {
@@ -79,7 +82,7 @@ export default createStore({
       localStorage.setItem('columns', JSON.stringify(state.columns));
     },
     focusChoiceCells(state, str) {
-      const cells = str.match(/([a-z]\d)+/gi);
+      const cells = str.match(/([a-z]\d+)+/gi);
       
       cleanChoiceCells();
 
@@ -100,6 +103,11 @@ export default createStore({
       function cleanChoiceCells() {
         state.columns.map(column => column.cells.map(cell => cell.choiceCell = false));
       }
+    },
+    cleanFocusChoiceCells(state) {
+      state.columns.map(column => {
+        column.cells.map(cell => cell.choiceCell = false);
+      });
     }
   }
 });
